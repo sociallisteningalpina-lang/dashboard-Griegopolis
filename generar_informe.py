@@ -63,48 +63,48 @@ def run_report_generation():
     # <<<--- INICIA LA NUEVA FUNCIÓN DE CLASIFICACIÓN ---<<<
     def classify_topic(comment):
         """
-        Clasifica un comentario según las nuevas temáticas de la campaña de coleccionables.
+        Clasifica un comentario según las nuevas temáticas de la campaña de Alpina Griego.
         El orden de las condiciones define la prioridad de la clasificación.
         """
         comment_lower = str(comment).lower()
+        
+        # --- TEMAS DE ALTO IMPACTO (Negativos o Preguntas) ---
     
-        # Prioridad 1: SPAM / Comentarios Ofensivos / Irrelevantes (se identifican primero para filtrar ruido)
-        if re.search(r'contrase[ñn]a de wifi|gog6|youtube\.com|youtu\.be|mujer,bella,no,sigas|chulo,y,bida,buena|me vale vrg|me puede regalar la c[aá]mara|@|:ya me cans[eé] de fingir si me gustan los femboys|creyente hablando de plomo|part 2|\b8\b|\bincoontroo\b|\byaper\b|\bya we\b|\bx2\b|\bbrooo\b|\banotado\b|\baaaw\b|\bdayum\b|\bde todos\b', comment_lower):
+        # Prioridad 1: Percepción Negativa (Salud)
+        # Comentarios que sugieren que el producto no es saludable o engorda.
+        if re.search(r'engorda|mucha az[uú]car|no (es|parece) saludable|hace da[ñn]o|porqueria', comment_lower):
+            return 'Percepción Negativa (Salud)'
+            
+        # Prioridad 2: Preguntas sobre Ingredientes
+        # Dudas específicas sobre componentes (azúcares, aditivos).
+        if re.search(r'aspartame|sacarosa|az[uú]car|ingredientes|componentes|tiene|contiene.*\?|informaci[oó]n nutricional', comment_lower):
+            return 'Preguntas sobre Ingredientes'
+    
+        # Prioridad 3: Preguntas sobre Precio
+        # Comentarios que preguntan por el costo.
+        if re.search(r'\ba como\b|precio|cu[aá]nto vale|valor|costo', comment_lower):
+            return 'Preguntas sobre Precio'
+    
+        # --- TEMAS POSITIVOS ---
+    
+        # Prioridad 4: Percepción Positiva (Nutrición)
+        # Comentarios que resaltan atributos nutricionales como la proteína.
+        if re.search(r'prote[ií]na|gramos de proteina|nutritivo|saludable|buen[ao]s (ingredientes|componentes)|bajo en', comment_lower):
+            return 'Percepción Positiva (Nutrición)'
+            
+        # Prioridad 5: Interés Positivo (Producto/Receta)
+        # Reacciones de antojo, gusto o interés por la preparación mostrada (ej. waffle).
+        if re.search(r'waflesote|waffle|delicioso|rico|me gusta|encanta|se ve bueno|provoca|mejor no me cuido|jummm|tremendo', comment_lower):
+            return 'Interés Positivo (Producto/Receta)'
+    
+        # --- FILTROS DE RUIDO ---
+    
+        # Prioridad 6: Comentarios No Relevantes o Interacciones
+        # Saludos, spam, interjecciones, o respuestas muy cortas que no aportan información.
+        # Se filtran aquí después de asegurar que no son positivos o negativos.
+        if re.search(r'am[eé]n|okis|\bmmm\b|\bw\b|whaaat|ignorante|jajaja|hola|gracias|bendiciones|valentina|si es vdd|@', comment_lower) or len(comment_lower.split()) < 3:
             return 'Comentarios No Relevantes o Interacciones'
-    
-        # Prioridad 2: Quejas sobre Calidad del Producto o Reputación del Producto/Marca
-        if re.search(r'diarrea|explota|mala calidad|hace da[ñn]o|temu|echa como perros|huelen horrible|textura.*fea|se ensucia re facil|porqueria|no es saludable|se los r\*oban|empresa mala con los empleados|unicornio|cocodrilo|mismo caracol amarillo', comment_lower):
-            return 'Quejas sobre Calidad del Producto'
-    
-        # Prioridad 3: Problemas y Quejas de Disponibilidad / Canje (incluye dificultades de encontrar, canjear o problemas de stock)
-        if re.search(r'\bno hay\b|no se consigue|se acabar[aá]n|nadie da raz[oó]n|no saben c[oó]mo|no llega|no lo venden|no lo encuentro|no (lo|los) dan|recort[oó] mal|sin c[oó]digo|repetidos|dif[ií]cil de conseguir|pasa lo mismo|sin oxxo|lejos|mucha vaina pa eso|filas|no est[aá]n|no hay todav[ií]a|no tiene idea|colecci[oó]n pasada|no tienen|d[oó]nde yo estoy no|que belleza el oxxo m[aá]s sercano lo tengo a 2 horas', comment_lower):
-            return 'Problemas y Quejas de Disponibilidad / Canje'
-    
-        # Prioridad 4: Críticas a la Campaña y Publicidad (feedback sobre el concepto, diseño, comparación con campañas anteriores, sugerencias)
-        if re.search(r'basta de|p[oó]ngale ganas|como (lo|las) hac[ií]an antes|aburren|explotar m[aá]s a esos mochis|buenas propagandas|falta de imaginaci[oó]n|se copiaron|mal[ií]sima.*idea|potencial enorme|ya murieron esos mu[ñn]ecos|mu[ñn]equitos de antes|no quiero m[aá]s mochis|peores mu[ñn]ecos|mucho trabajo para un mu[ñn]eco|mochisaurios\? es enserio\?|nada que ver|quitar los mochis|saquen otra colecci[oó]n|d1 o un merca z|mrd|paren|dios mioooo|dr[aá]cula|gogos|yoyos de yogoyogo|james y falcao|ninjas|goku|pens[eé] que era una publicidad delos simpson|que no sean los mochis|no les importa las otras ciudades|falta de respeto|que pereza tan vuelta|no tienen publicistas buenos', comment_lower):
-            return 'Críticas a la Campaña y Publicidad'
-    
-        # Prioridad 5: Preguntas sobre la Dinámica de la Campaña (cómo participar, reglas, información específica)
-        if re.search(r'd[oó]nde puedo ver|d[oó]nde se puede|d[oó]nde se (pueden|puede) cambiar|lista de|c[oó]mo se reclaman|c[oó]mo consigo|duda|pregunta|\?|para que sirve|beneficios|qu[eé] pas[oó] con|diferencia|c[oó]mo se limpian|nombres de los mochisaurios|aceptan los mismos paquetes|cu[aá]nto se pueden reclamar|est[aá]n en todos los pa[ií]ses\?|a poco hay oxxo|qu[eé] beneficios tiene|d[oó]nde los consigo|que es eso\?|valdr[aá] mucho', comment_lower):
-            return 'Preguntas sobre la Dinámica de la Campaña'
-    
-        # Prioridad 6: Comentarios sobre Precio (costo, comparaciones de valor)
-        if re.search(r'\bprecio\b|cu[aá]nto vale|valor|caro|barato|bajen el precio|costos[oó]s|sale mejor|m[aá]s barato|2 por 1000', comment_lower):
-            return 'Comentarios sobre Precio'
-    
-        # Prioridad 7: Interés y Expectativa Positiva (entusiasmo, intención de compra, satisfacción con la adquisición)
-        if re.search(r'maravilla|quiero+|ya tengo|voy a comprar|vamos|felicitaciones|excelente|me gusta|genial|espectacular|encanta|s[úu]per|amo+|fan|adicta|colecci[oó]n|al lado de mi casa|f[aá]cil conseguirlos|guau|que bien|que calidad|👍🏻|felicitaciones|lo m[aá]ximo|gran trabajo|me encantan|me sali[oó]|compr[eé]', comment_lower):
-            return 'Interés y Expectativa Positiva'
-    
-        # Prioridad 8: Información/Aclaración (comentarios que proveen información o corrigen malentendidos, a menudo respuestas de Alpina o usuarios informados)
-        if re.search(r'sii hay|s[ií] hay|si est[aá]n|en bogot[aá] es donde hay|depende de la ciudad|conoce tu oxxo m[aá]s cercano en yogoyogolab.com|puedes encontrar los mochisaurios en yogo yogo premio|la promo es para colombia|alpina es de colombia|acabamos de lanzar|1: la marca es de colombia|en yogo premio aparece|en los yogopremio est[aá]n saliendo|en el yogoyogo en presentaci[oó]n de tarrito sorpresa vienen|en el [eé]xito lo vende|en todo a 1000 los venden|si claro si yo vivo en colomb|si eres de bogot[aá]|si en pereira|la verdad en bogot[aá] hay oxxo|aqu[ií] puedes ver los nombres|._. soy de bogot[aá] y si hay oxxo', comment_lower):
-            return 'Información/Aclaración'
-    
-        # Prioridad final: Comentarios No Relevantes o Interacciones (después de intentar clasificar en todo lo demás)
-        # Estos son comentarios muy cortos, saludos, interjecciones, o aquellos que realmente no encajan en las otras categorías.
-        if re.search(r'\bjajaja\b|\bgracias\b|bendiciones|am[eé]n|\bhola\b|as[ií] vamos|kmilo perdomo mira amor|._. c[oó]mo que no|como|ciertoooo|todos los lugares no tiene esa tienda|pues es que alpina es una empresa colombiana|pues en tu cochineria no habr[aá]|pues de colombia es que son los productos|depende la ciudad; cerrando el primer semestre hab[ií]a|depende de la ciudad ej en barranquilla cada 2 cuadras hay oxxo|eee en colombia si hay|en colombia\? depende de la ciudad|en colombia noa ah|en colombia|en bogata tunja|en armenia quindio hay muchos|em cali he visto 2 oxxo|oilo jajajajajjaajja en su cerro sera aguev|no soy mujer|nena voy mal con la paleta dr[aá]cula|mi mala suerte|me encantan los mochis mi mam[aá] nunca me compra ninguno|los dan todos|la promo es para colombia|juuuum cada dos cuadras hay un oxxo|heee para eso lo colocar[ií]an mejor en un d1 o un merca z|hay un oxxo al lado de mi casa literalmente|graciass. me dioo unoo|esta vez est[aá] m[aá]s facil conseguirlos en alkosto pasto|eso pa que|envi|d[oó]nde yo estoy no|de cu[aá]nto se pueden reclamar|\bguau\b|moral jajajaja|\bhola\b', comment_lower) or len(comment_lower.split()) < 4:
-            return 'Comentarios No Relevantes o Interacciones'
-    
+            
         # Categoría por defecto si no coincide con ninguna de las anteriores.
         return 'Otros'
     
@@ -399,6 +399,7 @@ def run_report_generation():
 
 if __name__ == "__main__":
     run_report_generation()
+
 
 
 
