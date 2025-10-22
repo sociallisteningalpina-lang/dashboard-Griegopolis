@@ -58,7 +58,9 @@ URLS_A_PROCESAR = [
     "https://www.facebook.com/100064867445065/posts/1237165381789032/",
     "https://www.instagram.com/p/DPWq24ggGHi/",
     "https://www.instagram.com/p/DPWq9KSAETh/",
-    "https://www.facebook.com/100064867445065/posts/1237165121789058/"
+    "https://www.facebook.com/100064867445065/posts/1237165121789058/",
+    "https://www.tiktok.com/@alpinacol/video/7556736663167323393?_r=1&_t=ZS-90lPtFV0mSm",
+    "https://www.tiktok.com/@alpinacol/video/7556736663167307009?_r=1&_t=ZS-90lPoos65jU"
 ]
 
 # INFORMACIÓN DE CAMPAÑA
@@ -280,6 +282,7 @@ def run_extraction():
 
 if __name__ == "__main__":
     run_extraction()
+
 
 
 
